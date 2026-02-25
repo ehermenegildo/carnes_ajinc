@@ -1,0 +1,28 @@
+### Python ###
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+### Dados e Saídas (Privacidade) ###
+# Ignora todos os arquivos dentro de input e output
+# Mas mantém as pastas no projeto
+data/input/*
+data/output/*
+
+# Excessão: Não ignorar o .gitkeep (caso queira manter as pastas vazias no Git)
+!data/input/.gitkeep
+!data/output/.gitkeep
+
+### Excel/Planilhas ###
+*.xlsx
+*.xls
+*.csv
+
+### PDFs Gerados ###
+*.pdf
+
+### IDEs ###
+.vscode/
+.idea/
