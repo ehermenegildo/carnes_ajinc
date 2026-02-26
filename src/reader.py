@@ -2,8 +2,12 @@ import openpyxl
 
 def ler_planilha(arquivo):
     # Carregar a planilha usando openpyxl
-    workbook = openpyxl.load_workbook(arquivo)
-    
+    try:
+        workbook = openpyxl.load_workbook(arquivo)
+    except Exception as e:
+        print(f"Erro ao carregar a planilha: {e}")
+        return []
+
     # Selecionar a primeira aba da planilha
     sheet = workbook.active
     

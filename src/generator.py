@@ -1,4 +1,5 @@
 import os
+from datetime import date
 from fpdf import FPDF
 from num2words import num2words
 from src.pix import PixProvider
@@ -52,6 +53,7 @@ class CarneAJINC(FPDF):
         self.text(x + 2, y + 18, f"ATLETA: {atleta['Nome'][:25]}")
         self.text(x + 2, y + 23, f"PARCELA: {parcela}/{total_parc}")
         self.text(x + 2, y + 28, f"VENCIMENTO: {data_venc}")
+        self.text(x + 2, y + 33, f"CATEGORIA: {atleta['Categoria'].replace('_', ' ')}")       
 
         self.set_font("helvetica", "B", 9)
         self.text(x + 2, y + 40, f"VALOR: R$ {valor:,.2f}".replace(
@@ -80,10 +82,13 @@ class CarneAJINC(FPDF):
             self.image(path_logo, xc + 2, y + 2, 15)
 
         self.set_font("helvetica", "B", 9)
-        self.text(xc + 20, y + 7, "AJINC - ASSOCI. JARAGUAENSE INCENT. DA NATAÇÃO COMPETITIVA")
+        self.text(xc + 20, y + 7,
+                  "ASSOCIAÇÃO JARAGUAENSE DOS INCENT. DA NATAÇÃO COMPETITIVA")
         self.set_font("helvetica", "", 7)
-        self.text(xc + 20, y + 12, "R Gustavo Hagedorn, 636, Bairro Nova Brasília, Jaraguá do Sul - SC, CEP 89.265-252")
-        self.text(xc + 20, y + 16, "CNPJ: 03.191.568/0001-25 | Fone: (47) 0000-0000")
+        self.text(xc + 20, y + 12,
+                  "R Gustavo Hagedorn, 636, Bairro Nova Brasília, Jaraguá do Sul - SC, CEP 89.265-252")
+        self.text(xc + 20, y + 16,
+                  "CNPJ: 03.191.568/0001-25 | Fone: (47) 0000-0000")
 
         # Dados do Atleta
         self.line(xc, y + 18, xc + larg_corpo, y + 18)
@@ -130,12 +135,15 @@ class CarneAJINC(FPDF):
 def gerar_todos_carnes(lista_atletas):
     pdf = CarneAJINC()
 
-    # Datas de Março/2026 a Fevereiro/2027 (12 meses)
-    datas = [
-        "10/03/2026", "10/04/2026", "10/05/2026", "10/06/2026", "10/07/2026",
-        "10/08/2026", "10/09/2026", "10/10/2026", "10/11/2026", "10/12/2026",
-        "10/01/2027", "10/02/2027"
-    ]
+    # Gera 12 datas de 10/03/<ano> até 10/02/<ano+1> automaticamente
+    start_month = 3  # março
+    base_year = date.today().year
+    datas = []
+    for i in range(12):
+        m = start_month + i
+        year = base_year + (m - 1) // 12
+        month = ((m - 1) % 12) + 1
+        datas.append(f"10/{month:02d}/{year}")
 
     for atleta in lista_atletas:
         valor = VALORES_CATEGORIA.get(atleta['Categoria'], 100.00)
