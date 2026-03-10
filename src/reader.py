@@ -1,6 +1,13 @@
 import openpyxl
 
 def ler_planilha(arquivo):
+    '''Lê os dados de uma planilha Excel e retorna uma lista de dicionários.
+    Args:
+        arquivo (str): O caminho para o arquivo Excel a ser lido.
+    Returns:
+        dados (list): Uma lista de dicionários com os dados dos atletas.
+    '''
+    
     # Carregar a planilha usando openpyxl
     try:
         workbook = openpyxl.load_workbook(arquivo)
@@ -20,3 +27,4 @@ def ler_planilha(arquivo):
         })
     
     return dados
+

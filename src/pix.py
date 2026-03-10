@@ -4,7 +4,17 @@ import unicodedata
 import re
 
 class PixProvider:
+    """
+    Classe para gerar QR Code de pagamento via PIX usando o padrão EMV.
+    """
     def __init__(self, nome_recebedor, cidade, chave_cnpj):
+        """
+        Inicializa o provedor PIX com os dados do recebedor.
+
+        :param nome_recebedor: Nome do recebedor (máx. 25 caracteres, sem acentos)
+        :param cidade: Cidade do recebedor (máx. 15 caracteres, sem acentos)
+        :param chave_cnpj: Chave PIX do recebedor (CNPJ, CPF ou e-mail, mas aqui assumimos CNPJ para simplificar)
+        """
         # Remove acentos e caracteres especiais do nome e cidade
         self.nome_recebedor = self._limpar_texto(nome_recebedor)[:25].upper()
         self.cidade = self._limpar_texto(cidade)[:15].upper()
@@ -12,18 +22,33 @@ class PixProvider:
         self.chave_cnpj = "".join(filter(str.isdigit, chave_cnpj))
 
     def _limpar_texto(self, texto):
-        """Remove acentos e mantém apenas letras e números básicos"""
+        """
+        Remove acentos e caracteres especiais, mantendo apenas letras e números básicos.
+
+        :param texto: String a ser limpa
+        :return: String sem acentos e caracteres especiais, mantendo apenas letras e números básicos
+        """
         if not texto: return ""
         nfkd = unicodedata.normalize('NFKD', texto)
         texto_limpo = "".join([c for c in nfkd if not unicodedata.combining(c)])
         return re.sub(r'[^a-zA-Z0-9 ]', '', texto_limpo)
 
     def _formatar_campo(self, id_campo, valor):
-        """Formata no padrão EMV: ID + TAMANHO + VALOR"""
+        """
+        Formata no padrão EMV: ID + TAMANHO + VALOR
+
+        :param id_campo: ID do campo
+        :param valor: Valor do campo
+        :return: String formatada
+        """
         return f"{id_campo}{len(valor):02d}{valor}"
 
     def _calcular_crc16(self, payload):
-        """Cálculo exato do CRC16-CCITT (XModem) para PIX"""
+        """Cálculo exato do CRC16-CCITT (XModem) para PIX
+        
+        :param payload: String do payload sem o campo CRC
+        :return: CRC16 em formato hexadecimal (4 caracteres)
+        """
         payload += "6304" # Indica o início da tag do CRC
         crc = 0xFFFF
         for char in payload:
@@ -37,6 +62,12 @@ class PixProvider:
         return f"{crc:04X}"
 
     def gerar_qr_code(self, valor, identificacao):
+        """Gera o QR Code para pagamento via PIX.
+        
+        :param valor: Valor a ser pago
+        :param identificacao: Identificação da transação
+        :return: Imagem do QR Code
+        """
         # 00: Payload Format Indicator (Fixo '01')
         payload = self._formatar_campo("00", "01")
         

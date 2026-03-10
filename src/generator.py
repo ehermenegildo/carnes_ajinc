@@ -21,7 +21,9 @@ VALORES_CATEGORIA = {
 
 
 class CarneAJINC(FPDF):
+    """Classe para gerar carnês de pagamento da AJINC usando FPDF e integração com PixProvider."""
     def __init__(self):
+        """Inicializa o PDF e o provedor de Pix com os dados da AJINC."""
         super().__init__()
         # Inicializa o provedor de Pix com os dados da AJINC
         self.pix_provider = PixProvider(
@@ -31,6 +33,16 @@ class CarneAJINC(FPDF):
         )
 
     def desenhar_carne(self, x, y, atleta, parcela, total_parc, data_venc, valor):
+        """Desenha um carnê completo para um atleta, incluindo canhoto, corpo e QR code Pix.
+            Args:
+            x (float): Coordenada X inicial do carnê.
+            y (float): Coordenada Y inicial do carnê.
+            atleta (dict): Dicionário com informações do atleta (Nome, Categoria).
+            parcela (int): Número da parcela atual.
+            total_parc (int): Total de parcelas.
+            data_venc (str): Data de vencimento no formato "DD/MM/AAAA".
+            valor (float): Valor da parcela.
+        """
         # --- Configurações de Estilo ---
         self.set_line_width(0.2)
         larg_canhoto = 55
@@ -133,6 +145,12 @@ class CarneAJINC(FPDF):
 
 
 def gerar_todos_carnes(lista_atletas):
+    """Função principal para gerar o PDF com os carnês de pagamento para todos os atletas da lista.
+        Args:
+            lista_atletas (list): Lista de dicionários com informações dos atletas.
+        Returns:
+            None
+        """
     pdf = CarneAJINC()
 
     # Gera 12 datas de 10/03/<ano> até 10/02/<ano+1> automaticamente
@@ -163,5 +181,6 @@ def gerar_todos_carnes(lista_atletas):
     if not os.path.exists("data/output"):
         os.makedirs("data/output")
 
-    pdf.output("data/output/carnes_ajinc_2026.pdf")
-    print("Sucesso! O arquivo 'carnes_ajinc_2026.pdf' foi gerado na pasta data/output.")
+    pdf.output(f"data/output/carnes_ajinc_{base_year}.pdf")
+    print(f"Sucesso! O arquivo 'carnes_ajinc_{base_year}.pdf' foi gerado na pasta data/output.")
+
