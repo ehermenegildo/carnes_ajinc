@@ -7,19 +7,19 @@ class PixProvider:
     """
     Classe para gerar QR Code de pagamento via PIX usando o padrão EMV.
     """
-    def __init__(self, nome_recebedor, cidade, chave_cnpj):
+    def __init__(self, nome_recebedor, cidade, chave):
         """
         Inicializa o provedor PIX com os dados do recebedor.
 
         :param nome_recebedor: Nome do recebedor (máx. 25 caracteres, sem acentos)
         :param cidade: Cidade do recebedor (máx. 15 caracteres, sem acentos)
-        :param chave_cnpj: Chave PIX do recebedor (CNPJ, CPF ou e-mail, mas aqui assumimos CNPJ para simplificar)
+        :param chave: Chave PIX do recebedor (CNPJ, CPF, e-mail ou chave aleatória)
         """
         # Remove acentos e caracteres especiais do nome e cidade
         self.nome_recebedor = self._limpar_texto(nome_recebedor)[:25].upper()
         self.cidade = self._limpar_texto(cidade)[:15].upper()
-        # Garante que a chave é apenas números (para CNPJ)
-        self.chave_cnpj = "".join(filter(str.isdigit, chave_cnpj))
+        # Armazena a chave PIX sem alterações (aceita UUID, e-mail, CPF, CNPJ etc.)
+        self.chave = chave.strip() if chave else ""
 
     def _limpar_texto(self, texto):
         """
@@ -76,7 +76,7 @@ class PixProvider:
         
         # 26: Merchant Account Information
         gui = self._formatar_campo("00", "br.gov.bcb.pix")
-        chave = self._formatar_campo("01", self.chave_cnpj)
+        chave = self._formatar_campo("01", self.chave)
         payload += self._formatar_campo("26", gui + chave)
         
         # 52: Merchant Category Code (0000)

@@ -29,7 +29,7 @@ class CarneAJINC(FPDF):
         self.pix_provider = PixProvider(
             nome_recebedor="AJINC",
             cidade="JARAGUA DO SUL",
-            chave_cnpj="03.191.568/0001-25"
+            chave="7f33b1a2-039d-4f81-b001-29d22f83dd82"
         )
 
     def desenhar_carne(self, x, y, atleta, parcela, total_parc, data_venc, valor):
