@@ -4,7 +4,7 @@ Este projeto é uma ferramenta de automação desenvolvida em Python para a **AJ
 
 - **Leitura Inteligente:** Processa arquivos `.xlsx` capturando nome e categoria dos atletas.
 - **Valores por Categoria:** Aplica automaticamente o valor da mensalidade baseado na categoria do atleta (Sênior, Júnior, Petiz, etc).
-- **Pix Dinâmico (BR Code):** Gera um QR Code Pix para cada parcela, já com o valor correto, chave CNPJ da AJINC e identificação do atleta.
+- **Pix Dinâmico (BR Code):** Gera um QR Code Pix para cada parcela, já com o valor correto, chave CNPJ da Instituição e identificação do atleta.
 - **Cálculo de Datas:** Gera automaticamente 12 parcelas (de Março/2026 a Fevereiro/2027).
 - **PDF Profissional:** Layout com canhoto e corpo do carnê, incluindo logo e valor por extenso.
 - **Modularização:** Lógica de Pix separada para fácil manutenção.
